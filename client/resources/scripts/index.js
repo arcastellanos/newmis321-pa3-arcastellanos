@@ -4,6 +4,7 @@ let app = document.getElementById("app")
 let Songs = []
 
 function handleOnLoad(){
+    
     fetch(url)
     .then(function (response) {
       return response.json();
@@ -11,11 +12,8 @@ function handleOnLoad(){
     .then(function (data) {
     console.log("test")
       Songs = data;
-      console.log("test1")
       Songs.reverse();
-      console.log("test2")
       createTable();
-      console.log(Songs)
     });
 
 }
@@ -63,6 +61,7 @@ function addRow(song)
 
 function createTable()
 {
+    
     let table = document.createElement('TABLE')
     table.border = '1'
     table.id = 'songTable'
@@ -90,12 +89,28 @@ function createTable()
     tr.appendChild(th3)
 
     
+    let th4 = document.createElement('TH')
+    th4.width = 200
+    th4.appendChild(document.createTextNode('Date'))
+    tr.appendChild(th4)
+
     let th5 = document.createElement('TH')
     th5.width = 200
-    th5.appendChild(document.createTextNode('Date'))
+    th5.appendChild(document.createTextNode('Edit  Favorite  Delete'))
     tr.appendChild(th5)
+
+    // let th6 = document.createElement('TH')
+    // th6.width = 200
+    // th6.appendChild(document.createTextNode('Favorite'))
+    // tr.appendChild(th6)
+
+    // let th7 = document.createElement('TH')
+    // th7.width = 200
+    // th7.appendChild(document.createTextNode('Delete'))
+    // tr.appendChild(th7)
     
     Songs.forEach((song)=>{
+        if(song.deleted == true){return;}
         let tr = document.createElement('TR')
         tableBody.appendChild(tr)
         
@@ -115,85 +130,169 @@ function createTable()
         tr.appendChild(td3)
         
         
-        // let td4 = document.createElement('TD')
-        // td4.width = 100
-        // td4.appendChild(document.createTextNode(`${song.dateAdded}`))
-        // <button onclick="editSong('${song.id}')" class="editbtn">edit</button>
-        // tr.appendChild(td4)
+        let td4 = document.createElement('TD')
+        td4.width = 100
+        td4.appendChild(document.createTextNode(`${song.dateAdded}`))
+        
+        tr.appendChild(td4)
+        
 
-        // let td5 = document.createElement('TD')
-        // td5.width = 100
-        // td5.appendChild(document.createTextNode(`${song.dateAdded}`))
-        // <button onclick="editSong('${song.id}')" class="editbtn">edit</button>
-        // tr.appendChild(td5)
+
+        let newBut = document.createElement('button')
+        newBut.setAttribute("onclick", `EditSong('${song.id}')`)
+        newBut.style = 'width: 25px; height: 25px'
+        
+        tr.appendChild(newBut)
+
+        let newBut1 = document.createElement('button')
+        newBut1.setAttribute("onclick", `FavoriteSong('${song.id}')`)
+        newBut1.style = 'width: 25px; height: 25px'
+        
+        tr.appendChild(newBut1)
+
+        let newBut2 = document.createElement('button')
+        newBut2.setAttribute("onclick", `DeleteSong('${song.id}')`)
+        newBut2.style = 'width: 25px; height: 25px'
+        
+        tr.appendChild(newBut2)
+        
+
     })
     
     app.appendChild(table)
 }
-async function editSong(){
 
+async function EditSong(id){
+    let newSong = 2
+    let date = new Date()
+    date = date.toLocaleDateString('en-us')
+    let localArtist = document.getElementById("editArtist").value
+    let localTitle = document.getElementById("editTitle").value
+    for(let i = 0; i < Songs.length; i++){
+        if(Songs[i].id == id){
+            console.log(Songs[i].title)
+            newSong = {
+                id : Songs[i].id,
+                artist : localArtist,
+                title : localTitle,
+                dateAdded : Songs[i].dateAdded,
+                deleted : Songs[i].deleted,
+                favorited : Songs[i].favorited
+            }
+        }
+    }
+    console.log(newSong.artist)
+
+    await fetch(`${url}/${id}`, {
+        method: "PUT",
+        headers: {
+          accept: "*/*",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(newSong),
+    });
+    location.reload();
+    handleOnLoad()
 }
 
-document.querySelector('#Favorite').addEventListener('submit', function(e){
-    e.preventDefault()
-    let titleFavorite = e.target.elements.Title.value
-    let Index = Songs.findIndex((obj=> obj.Title == titleFavorite && obj.Favorited == false)) 
 
-    if(Index > -1){
-        Songs[Index].Favorited = true
-        }
-        else{
+
+async function DeleteSong(id){
+    let newSong = 2
+    let date = new Date()
+    date = date.toLocaleDateString('en-us')
+
+    for(let i = 0; i < Songs.length; i++){
+        if(Songs[i].id == id){
+            newSong = {
+            id : Songs[i].id,
+            title : Songs[i].title,
+            artist : Songs[i].artist,
+            dateAdded : Songs[i].dateAdded,
+            deleted : true,
+            favorited : Songs[i].favorited
+            }
             
-            return
         }
+    }
+    console.log(newSong.title)
+    await fetch(`${url}/${id}`, {
+        method: "PUT",
+        headers: {
+          accept: "*/*",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(newSong),
+    });
+    location.reload();
+    handleOnLoad()
+}
 
-          await fetch(`${url}/${id}`, {
-            method: "PUT",
-            headers: {
-              accept: "*/*",
-              "content-type": "application/json",
-            },
-            body: JSON.stringify(song),
-          });
+async function FavoriteSong(id){
+    let newSong = 2
+    let date = new Date()
+    date = date.toLocaleDateString('en-us')
 
+    for(let i = 0; i < Songs.length; i++){
+        if(Songs[i].id == id){
+            newSong = {
+                id : Songs[i].id,
+                title : Songs[i].title,
+                artist : Songs[i].artist,
+                dateAdded : Songs[i].dateAdded,
+                deleted : Songs[i].deleted,
+                favorited : !Songs[i].favorited
+            }
 
-    let table = document.getElementById('songTable')
-    table.parentNode.removeChild(table)
-    createTable()
-    e.target.elements.Title.value = ''
-
-})
-document.querySelector('#Delete').addEventListener('submit', function(e){
-    e.preventDefault()
-    let titleDelete = e.target.elements.Title.value
-    let Index = Songs.findIndex((obj=> obj.Title == titleDelete && obj.Deleted == false)) 
-
-    if(Index > -1){
-        Songs[Index].Deleted = true
         }
-        else{
+    }
+    
+    await fetch(`${url}/${id}`, {
+        method: "PUT",
+        headers: {
+          accept: "*/*",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(newSong),
+      });    
+      location.reload();
+      handleOnLoad()
+}
+
+
+// document.querySelector('#Delete').addEventListener('submit', function(e){
+//     e.preventDefault()
+//     DeleteSong()
+//     // let titleDelete = e.target.elements.Title.value
+//     // let Index = Songs.findIndex((obj=> obj.Title == titleDelete && obj.Deleted == false)) 
+
+//     // if(Index > -1){
+//     //     Songs[Index].Deleted = true
+//     //     }
+//     //     else{
             
-            return
-        }
-    localStorage.setItem('mySongs', JSON.stringify(Songs))
-    let table = document.getElementById('songTable')
-    table.parentNode.removeChild(table)
-    createTable()
-    e.target.elements.Title.value = ''
+//     //         return
+//     //     }
+//     // localStorage.setItem('mySongs', JSON.stringify(Songs))
+//     // let table = document.getElementById('songTable')
+//     // table.parentNode.removeChild(table)
+//     // createTable()
+//     // e.target.elements.Title.value = ''
 
-})
+// })
 
 document.querySelector('#Song').addEventListener('submit', function(e){
     e.preventDefault()
-    let currentDate = new Date().toJSON().slice(0,10)
+    let date = new Date()
+    date = date.toLocaleDateString('en-us')
     let song ={
         Title: e.target.elements.Title.value, 
         Artist: e.target.elements.Artist.value, 
         Favorited: false, 
         Deleted: false, 
-        DateAdded: currentDate
+        DateAdded: date
     }
-    await fetch(url, {
+    fetch(url, {
         method: "POST",
         headers: {
           accept: "*/*",
@@ -201,27 +300,40 @@ document.querySelector('#Song').addEventListener('submit', function(e){
         },
         body: JSON.stringify(song),
       });
+    location.reload()
     handleOnLoad()
-    addRow(song)
+    //addRow(song)
     e.target.elements.Title.value = ''
     e.target.elements.Artist.value = ''
 })
 
-let editButton = document.createElement('button')
+// document.querySelector('#Favorite').addEventListener('submit', function(e){
+//     e.preventDefault()
+//     FavoriteSong()
+//     // let titleFavorite = e.target.elements.Title.value
+//     // let Index = Songs.findIndex((obj=> obj.Title == titleFavorite && obj.Favorited == false)) 
 
-editButton.classList.add("edit-Button")
-dataRow.appendChild(editButton)
+//     // if(Index > -1){
+//     //     Songs[Index].Favorited = true
+//     //     }
+//     //     else{
+            
+//     //         return
+//     //     }
 
-editButton.innerHTML = "Edit"
+//     //       fetch(`${url}/${id}`, {
+//     //         method: "PUT",
+//     //         headers: {
+//     //           accept: "*/*",
+//     //           "content-type": "application/json",
+//     //         },
+//     //         body: JSON.stringify(song),
+//     //       });
 
-editButton.style.backgroundColor = 'blue'
-editButton.addEventListener("click", function(){
-let currID = song.id
-let date = song.date
-let favorited = song.favorited
-let deleted = song.deleted
 
-let newTitle = prompt("What should the title be?")
-let newArtist = prompt("What should the artist be?") 
-handleEdit(currID, date, favorited, deleted, newTitle, newArtist)
-})
+//     // let table = document.getElementById('songTable')
+//     // table.parentNode.removeChild(table)
+//     // createTable()
+//     // e.target.elements.Title.value = ''
+
+// })
