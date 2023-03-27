@@ -96,7 +96,7 @@ function createTable()
 
     let th5 = document.createElement('TH')
     th5.width = 200
-    th5.appendChild(document.createTextNode('Edit  Favorite  Delete'))
+    th5.appendChild(document.createTextNode('Edit     Favorite     Delete'))
     tr.appendChild(th5)
 
     // let th6 = document.createElement('TH')
@@ -140,19 +140,18 @@ function createTable()
 
         let newBut = document.createElement('button')
         newBut.setAttribute("onclick", `EditSong('${song.id}')`)
-        newBut.style = 'width: 25px; height: 25px'
+        newBut.style = 'margin: 15px; padding: 10px; height: 25px'
         
         tr.appendChild(newBut)
 
         let newBut1 = document.createElement('button')
         newBut1.setAttribute("onclick", `FavoriteSong('${song.id}')`)
-        newBut1.style = 'width: 25px; height: 25px'
+        newBut1.style = 'margin: 10px; padding: 10px; height: 25px'
         
         tr.appendChild(newBut1)
-
         let newBut2 = document.createElement('button')
         newBut2.setAttribute("onclick", `DeleteSong('${song.id}')`)
-        newBut2.style = 'width: 25px; height: 25px'
+        newBut2.style = 'margin: 20px; padding: 10px; height: 25px'
         
         tr.appendChild(newBut2)
         
