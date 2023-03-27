@@ -95,19 +95,9 @@ function createTable()
     tr.appendChild(th4)
 
     let th5 = document.createElement('TH')
-    th5.width = 200
-    th5.appendChild(document.createTextNode('Edit     Favorite     Delete'))
+    th5.width = 400
+    th5.appendChild(document.createTextNode(''))
     tr.appendChild(th5)
-
-    // let th6 = document.createElement('TH')
-    // th6.width = 200
-    // th6.appendChild(document.createTextNode('Favorite'))
-    // tr.appendChild(th6)
-
-    // let th7 = document.createElement('TH')
-    // th7.width = 200
-    // th7.appendChild(document.createTextNode('Delete'))
-    // tr.appendChild(th7)
     
     Songs.forEach((song)=>{
         if(song.deleted == true){return;}
@@ -140,18 +130,22 @@ function createTable()
 
         let newBut = document.createElement('button')
         newBut.setAttribute("onclick", `EditSong('${song.id}')`)
-        newBut.style = 'margin: 15px; padding: 10px; height: 25px'
+        newBut.style = 'margin: 15px; padding: 10px; height: 40px'
+        newBut.textContent = "Edit"
         
         tr.appendChild(newBut)
 
         let newBut1 = document.createElement('button')
         newBut1.setAttribute("onclick", `FavoriteSong('${song.id}')`)
-        newBut1.style = 'margin: 10px; padding: 10px; height: 25px'
+        newBut1.style = 'margin: 10px; padding: 10px; height: 40px'
+        newBut1.textContent = "Favorite"
         
         tr.appendChild(newBut1)
         let newBut2 = document.createElement('button')
         newBut2.setAttribute("onclick", `DeleteSong('${song.id}')`)
-        newBut2.style = 'margin: 20px; padding: 10px; height: 25px'
+        newBut2.style = 'margin: 20px; padding: 10px; height: 40px'
+        newBut2.textContent = "Delete"
+
         
         tr.appendChild(newBut2)
         
@@ -258,28 +252,6 @@ async function FavoriteSong(id){
       handleOnLoad()
 }
 
-
-// document.querySelector('#Delete').addEventListener('submit', function(e){
-//     e.preventDefault()
-//     DeleteSong()
-//     // let titleDelete = e.target.elements.Title.value
-//     // let Index = Songs.findIndex((obj=> obj.Title == titleDelete && obj.Deleted == false)) 
-
-//     // if(Index > -1){
-//     //     Songs[Index].Deleted = true
-//     //     }
-//     //     else{
-            
-//     //         return
-//     //     }
-//     // localStorage.setItem('mySongs', JSON.stringify(Songs))
-//     // let table = document.getElementById('songTable')
-//     // table.parentNode.removeChild(table)
-//     // createTable()
-//     // e.target.elements.Title.value = ''
-
-// })
-
 document.querySelector('#Song').addEventListener('submit', function(e){
     e.preventDefault()
     let date = new Date()
@@ -306,33 +278,3 @@ document.querySelector('#Song').addEventListener('submit', function(e){
     e.target.elements.Artist.value = ''
 })
 
-// document.querySelector('#Favorite').addEventListener('submit', function(e){
-//     e.preventDefault()
-//     FavoriteSong()
-//     // let titleFavorite = e.target.elements.Title.value
-//     // let Index = Songs.findIndex((obj=> obj.Title == titleFavorite && obj.Favorited == false)) 
-
-//     // if(Index > -1){
-//     //     Songs[Index].Favorited = true
-//     //     }
-//     //     else{
-            
-//     //         return
-//     //     }
-
-//     //       fetch(`${url}/${id}`, {
-//     //         method: "PUT",
-//     //         headers: {
-//     //           accept: "*/*",
-//     //           "content-type": "application/json",
-//     //         },
-//     //         body: JSON.stringify(song),
-//     //       });
-
-
-//     // let table = document.getElementById('songTable')
-//     // table.parentNode.removeChild(table)
-//     // createTable()
-//     // e.target.elements.Title.value = ''
-
-// })

@@ -25,12 +25,7 @@ namespace api.Controllers
 
         }
 
-        // // GET: api/Songs/5
-        // [HttpGet("{id}", Name = "Get")]
-        // public string Get(int id)
-        // {
-        //     return "value";
-        // }
+      
 
         // POST: api/Songs
         [EnableCors("OpenPolicy")]
@@ -51,13 +46,6 @@ namespace api.Controllers
            editor.SaveSong(id, value);
         }
 
-        // DELETE: api/Songs/5
-        // [EnableCors("OpenPolicy")]
-        // [HttpDelete("{id}")]
-        // public void Delete(int id)
-        // {
-        //     SongHandler mySongHandler = new SongHandler();
-        //     mySongHandler.DeleteSong(id);
-        // }
+      
     }
 }
